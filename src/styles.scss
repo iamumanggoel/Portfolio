@@ -1,0 +1,40 @@
+@use '@angular/material' as mat;
+
+.light{
+    @include mat.theme((
+        color: mat.$azure-palette,
+      ),
+      $overrides: (
+        "background": #FAFAFA,
+      )
+      );
+}
+.dark{
+    @include mat.theme(
+        (
+            color: (
+                primary: mat.$azure-palette,
+                theme-type: dark,
+            )
+        ),
+        $overrides: (
+            "background": #24292e,
+        )
+    )
+}
+
+html, body { 
+    height: 100%;
+}
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+//background of widget when something is dragged on it
+.cdk-drop-list-dragging {
+    opacity: 0.5;
+    padding: 16px;
+}
+
