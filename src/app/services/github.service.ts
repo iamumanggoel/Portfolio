@@ -1,67 +1,40 @@
 import { Injectable } from '@angular/core';
-
-interface Project {
-  name: string;
-  description: string;
-  html_url: string;
-  languages_url?: string;
-  updated_at: string;
-  languages?: string[];
-}
+import { HttpService } from './http.service';
+import { environment } from '../environments/environment';
+import { catchError, map, Observable, of } from 'rxjs';
+import { Project } from '../models/github.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GithubService {
-  private apiUrl = 'https://api.github.com/';
+export class GithubService extends HttpService {
 
-  constructor() {}
+  protected override get baseUrl() {
+    return environment.githubBaseUrl;
+  }
 
-  fetchGitHubRepos(user_name: string = 'iamumanggoel'): Promise<Project[]> {
-    return fetch(`${this.apiUrl}users/${user_name}/repos`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
+  constructor() { super(); }
+
+  fetchGitHubRepos(user_name: string = 'iamumanggoel'): Observable<Project[]> {
+
+    return this.get<Project[]>(`users/${user_name}/repos`).pipe(
+      map(data => {
+        return data.map((project) => ({
+          name: project?.name,
+          description: project?.description ?? 'No description available.',
+          html_url: project?.html_url,
+          languages_url: project?.languages_url,
+          updated_at: project?.updated_at
+        }));
+      }),
+      catchError((error) => {
+        console.error('Error fetching GitHub repos:', error);
+        return of([]);
       })
-      .then(data => this.mapProjects(data))
-      .catch(error => {
-        console.error('Error fetching GitHub repos', error);
-        return [];
-      });
+    );
   }
 
-  private mapProjects(data: any[]): Project[] {
-    return data.map((project) => ({
-      name: project?.name,
-      description: project?.description ?? 'No description available.',
-      html_url: project?.html_url,
-      languages_url: project?.languages_url,
-      updated_at: project?.updated_at
-    }));
-  }
-
-  fetchProjectLanguages(projects: Project[]): Promise<Project[]> {
-    const languageFetchPromises = projects.map((project) => {
-      if (!project.languages_url) return Promise.resolve(project);
-      return fetch(project.languages_url)
-        .then(res => {
-          if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-          }
-          return res.json();
-        })
-        .then(languages => {
-          project.languages = Object.keys(languages);
-          return project;
-        })
-        .catch(error => {
-          console.error('Error fetching languages for', project.name, error);
-          return project; 
-        });
-    });
-
-    return Promise.all(languageFetchPromises);
+  fetchProjectLanguages(repo_name: string, user_name: string = 'iamumanggoel'): Observable<{ [key: string]: number }> { 
+    return this.get(`repos/${user_name}/${repo_name}/languages`);
   }
 }

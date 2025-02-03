@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { LeetcodeService } from '../../../../services/dashboard.service';
+import { LeetcodeService } from '../../../../services/leetcode.service';
 
 @Component({
   selector: 'app-subscribers',
@@ -60,17 +60,16 @@ export class TotalLabelComponent {
       this.loadChart();
     }
   
-    async loadChart(): Promise<void> {
-      try {
-        const response = await this.leetcodeService.getStats('Umang_Goel');
-        const { totalSolved } = response;
-        this.totalSolved = totalSolved;
-  
-       
-        
-      } catch (error) {
-        console.error('Error fetching stats:', error);
-      }
-    }
-
+    loadChart() {
+      this.leetcodeService.getStats().subscribe({
+        next: (response) => {
+          const { totalSolved } = response;
+          this.totalSolved = totalSolved;
+        },
+        error: (error) => {
+          console.error('Error fetching stats:', error);
+        },
+      })
+    } 
 }
+

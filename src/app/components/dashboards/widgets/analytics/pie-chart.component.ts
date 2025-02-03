@@ -1,6 +1,6 @@
 import { Component, ElementRef, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
-import { LeetcodeService } from '../../../../services/dashboard.service';
+import { LeetcodeService } from '../../../../services/leetcode.service';
 
 @Component({
   selector: 'app-pie-chart',
@@ -64,9 +64,8 @@ export class PieChartComponent implements OnInit, OnDestroy {
   }
 
   fetchStats(): void {
-    this.leetcodeService
-      .getStats()
-      .then((response) => {
+    this.leetcodeService.getStats().subscribe({
+      next: (response) => {
         if (response) {
           const easySolved = response?.easySolved ?? 0;
           const mediumSolved = response?.mediumSolved ?? 0;
@@ -79,10 +78,11 @@ export class PieChartComponent implements OnInit, OnDestroy {
             this.chartInstance.update();
           }
         }
-      })
-      .catch((error) => {
+      },
+      error: (error) => {
         console.error('Failed to fetch stats:', error);
-      });
+      },
+    });
   }
 
   

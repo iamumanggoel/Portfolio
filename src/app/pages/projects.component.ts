@@ -1,17 +1,9 @@
-import { CommonModule, SlicePipe, TitleCasePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { SlicePipe, TitleCasePipe } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-
-interface Project {
-  id: number;
-  name: string;
-  description: string;
-  html_url: string;
-  languages_url: string;
-  updated_at: string;
-  languages?: string[];
-}
+import { GithubService } from '../services/github.service';
+import { Project } from '../models/github.model';
 
 
 @Component({
@@ -97,53 +89,33 @@ interface Project {
   `]
 })
 export default class ProjectsComponent implements OnInit {
-  projects: Project[] = [];
+  
+  projects: Project[] | undefined;
+  githubService = inject(GithubService);
 
   ngOnInit(): void {
     this.fetchGitHubRepos();
   }
 
-  private async fetchGitHubRepos(): Promise<void> {
-    try {
-      const response = await fetch('https://api.github.com/users/iamumanggoel/repos');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      this.projects = this.mapProjects(data);
-      await this.fetchProjectLanguages();
-    } catch (error) {
-      console.error('Error fetching GitHub repos', error);
-    }
-  }
-
-  private mapProjects(data: any[]): Project[] {
-    return data.map((project) => ({
-      id: project?.id,
-      name: project?.name,
-      description: project?.description ?? 'No description available.',
-      html_url: project?.html_url,
-      languages_url: project?.languages_url,
-      updated_at: project?.updated_at
-    }));
-  }
-
-  private async fetchProjectLanguages(): Promise<void> {
-    const languageFetchPromises = this.projects.map(async (project) => {
-      if (!project.languages_url) return;
-      try {
-        const res = await fetch(project.languages_url);
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const languages = await res.json();
-        project.languages = Object.keys(languages);
-      } catch (error) {
-        console.error('Error fetching languages for', project.name, error);
+  private fetchGitHubRepos() {
+    this.githubService.fetchGitHubRepos().subscribe({
+      next: (projects) => {
+        this.projects = projects;
+        this.projects.forEach(project => {
+          this.githubService.fetchProjectLanguages(project.name).subscribe({
+            next: (response) => {
+              project.languages = Object.keys(response);
+            },
+            error: (error) => console.error("Error fetching languages", error)
+          });
+        });
+        console.log(projects);
+      },
+      error: (error) => {
+        console.error('Error fetching GitHub repos:', error);
       }
     });
-
-    await Promise.all(languageFetchPromises);
+    
   }
 
   openRepo(url: string) {
