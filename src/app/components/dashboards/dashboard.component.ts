@@ -1,12 +1,13 @@
 import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { WidgetComponent } from "./widgets/widget.component";
-import { DashboardService, LeetcodeService } from '../../services/dashboard.service';
+import { DashboardService } from '../../services/dashboard.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { wrapGrid } from 'animate-css-grid';
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
 import { WidgetsPanelComponent } from './widgets-panel.component';
+import { LeetcodeService } from '../../services/leetcode.service';
 @Component({
   selector: 'app-dashboard',
   imports: 
@@ -93,8 +94,8 @@ export default class DashboardComponent {
   widgetsOpen = signal<boolean>(false);
 
   ngOnInit(): void {
+    this.leetcodeService.fetchStats(); //populate leetcode stats
     wrapGrid(this.dashboard().nativeElement, { duration: 500 }); 
-    
   }
 
   drop(event: CdkDragDrop<number, any>){

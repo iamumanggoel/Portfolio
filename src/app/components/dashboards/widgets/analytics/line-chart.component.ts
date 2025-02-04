@@ -1,9 +1,9 @@
-import { Component, ElementRef, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import Chart from 'chart.js/auto'
 import { ThemeService } from '../../../../services/theme.service';
 import { RouterModule } from '@angular/router';
-import { LeetcodeService } from '../../../../services/dashboard.service';
+import { LeetcodeService } from '../../../../services/leetcode.service';
 
 @Component({
   selector: 'app-analytics',
@@ -28,7 +28,7 @@ import { LeetcodeService } from '../../../../services/dashboard.service';
   
   `
 })
-export class LineChartComponent implements OnInit, OnDestroy {
+export class LineChartComponent {
   
   chart = viewChild.required<ElementRef>('chart');
   private themeService = inject(ThemeService);
@@ -38,7 +38,6 @@ export class LineChartComponent implements OnInit, OnDestroy {
   
   ngOnInit(): void {
     this.initializeChart([], []); 
-    this.fetchStats();
   }
 
   private initializeChart(labels: string[], data: number[]): void {
@@ -82,36 +81,24 @@ export class LineChartComponent implements OnInit, OnDestroy {
     });
   }
   
-  fetchStats(): void {
-    this.leetcodeService
-    .getStats()
-    .then((response) => {
-      if (response?.submissionCalendar) {
-        const labels = Object.keys(response.submissionCalendar).map((timestamp) =>
-          new Date(parseInt(timestamp) * 1000).toLocaleDateString()
-      );
-      const data = Object.values(response.submissionCalendar) as number[];
+
+
+
+  effect = effect(() => {
+      const response = this.leetcodeService.leetcodeStats();
+      if (response) {
+        if (response?.submissionCalendar) {
+          const labels = Object.keys(response.submissionCalendar).map((timestamp) =>
+            new Date(parseInt(timestamp) * 1000).toLocaleDateString()
+        );
+        const data = Object.values(response.submissionCalendar) as number[];
       
-      if (this.chartInstance) {
-        this.chartInstance.data.labels = labels;
-        this.chartInstance.data.datasets[0].data = data;
-        this.chartInstance.update();
+        if (this.chartInstance) {
+          this.chartInstance.data.labels = labels;
+          this.chartInstance.data.datasets[0].data = data;
+          this.chartInstance.update();
+        }
       }
     }
-  })
-  .catch((error) => {
-    console.error('Failed to fetch stats:', error);
-    if (this.chartInstance) {
-      this.chartInstance.data.labels = ['Error'];
-      this.chartInstance.data.datasets[0].data = [0]; 
-      this.chartInstance.update();
-    }
   });
-}
-
-
-  
-  ngOnDestroy(): void {
-    this.chart()?.nativeElement?.remove();
-  }
 }
