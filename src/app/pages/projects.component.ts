@@ -100,16 +100,16 @@ export default class ProjectsComponent implements OnInit {
   private fetchGitHubRepos() {
     this.githubService.fetchGitHubRepos().subscribe({
       next: (projects) => {
-        this.projects = projects;
+        this.projects = projects.sort((x, y) => y.updated_at.localeCompare(x.updated_at));
         this.projects.forEach(project => {
           this.githubService.fetchProjectLanguages(project.name).subscribe({
             next: (response) => {
-              project.languages = Object.keys(response);
+              project.languages = response; 
             },
             error: (error) => console.error("Error fetching languages", error)
           });
         });
-        console.log(projects);
+        
       },
       error: (error) => {
         console.error('Error fetching GitHub repos:', error);

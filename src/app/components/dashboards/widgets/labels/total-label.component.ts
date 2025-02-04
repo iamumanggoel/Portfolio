@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { LeetcodeService } from '../../../../services/leetcode.service';
 
@@ -7,7 +7,7 @@ import { LeetcodeService } from '../../../../services/leetcode.service';
   imports: [MatIcon],
   template: `
     <div class="subscriber-container">
-      <h1> {{ totalSolved }} </h1>  
+      <h1> {{ leetcodeService.leetcodeStats()?.totalSolved ?? 0 }} </h1>  
       <mat-icon class="icon">arrow_circle_up</mat-icon>
     </div>
 
@@ -51,25 +51,6 @@ import { LeetcodeService } from '../../../../services/leetcode.service';
   `
 })
 export class TotalLabelComponent {
-
-  public totalSolved = 0;
-  fontSize: string | null = null;
-  leetcodeService = inject(LeetcodeService);
-
-    ngOnInit(): void {
-      this.loadChart();
-    }
-  
-    loadChart() {
-      this.leetcodeService.getStats().subscribe({
-        next: (response) => {
-          const { totalSolved } = response;
-          this.totalSolved = totalSolved;
-        },
-        error: (error) => {
-          console.error('Error fetching stats:', error);
-        },
-      })
-    } 
+  leetcodeService = inject(LeetcodeService);  
 }
 

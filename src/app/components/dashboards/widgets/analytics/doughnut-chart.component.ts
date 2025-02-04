@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, viewChild, inject, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit, viewChild, inject, OnDestroy, effect } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { ThemeService } from '../../../../services/theme.service';
 import { LeetcodeService } from '../../../../services/leetcode.service';
@@ -19,21 +19,16 @@ import { LeetcodeService } from '../../../../services/leetcode.service';
     `,
   ],
 })
-export class DoughnutChartComponent implements OnInit, OnDestroy {
+export class DoughnutChartComponent {
   chart = viewChild.required<ElementRef>('chart');
 
   leetcodeService = inject(LeetcodeService);
   themeService = inject(ThemeService);
 
-  ngOnInit(): void {
-    this.loadChart();
-  }
-
-  loadChart() {
-
-    this.leetcodeService.getStats().subscribe({
-      next: (response) => {
-        const { acceptanceRate } = response;
+  effect = effect(() => {
+    const response = this.leetcodeService.leetcodeStats();
+    if (response) {
+      const { acceptanceRate } = response;
         const acceptedPercentage = acceptanceRate ?? 90;
         const rejectedPercentage = 100 - acceptanceRate;
 
@@ -60,15 +55,8 @@ export class DoughnutChartComponent implements OnInit, OnDestroy {
             },
           },
         });
-      },
-      error: (error) => {
-        console.error('Error fetching stats:', error);
-      },
-    });
-      
-  }
 
-  ngOnDestroy(): void {
-    this.chart()?.nativeElement?.remove();
-  }
+    }
+  });
+
 }

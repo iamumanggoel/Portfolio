@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { LeetcodeService } from '../../../../services/leetcode.service';
 
@@ -18,7 +18,7 @@ import { LeetcodeService } from '../../../../services/leetcode.service';
     }
   `,
 })
-export class PieChartComponent implements OnInit, OnDestroy {
+export class PieChartComponent {
   chart = viewChild.required<ElementRef>('chart');
 
   private leetcodeService = inject(LeetcodeService);
@@ -27,7 +27,6 @@ export class PieChartComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeChart([0, 0, 0]); 
-    this.fetchStats();
   }
 
   private initializeChart(data: number[]): void {
@@ -63,30 +62,19 @@ export class PieChartComponent implements OnInit, OnDestroy {
     });
   }
 
-  fetchStats(): void {
-    this.leetcodeService.getStats().subscribe({
-      next: (response) => {
-        if (response) {
-          const easySolved = response?.easySolved ?? 0;
-          const mediumSolved = response?.mediumSolved ?? 0;
-          const hardSolved = response?.hardSolved ?? 0;
+    effect = effect(() => {
+    const response = this.leetcodeService.leetcodeStats();
+    if (response) {
+      const easySolved = response?.easySolved ?? 0;
+      const mediumSolved = response?.mediumSolved ?? 0;
+      const hardSolved = response?.hardSolved ?? 0;
 
-          const data = [easySolved, mediumSolved, hardSolved];
+      const data = [easySolved, mediumSolved, hardSolved];
 
-          if (this.chartInstance) {
-            this.chartInstance.data.datasets[0].data = data;
-            this.chartInstance.update();
-          }
-        }
-      },
-      error: (error) => {
-        console.error('Failed to fetch stats:', error);
-      },
-    });
-  }
-
-  
-  ngOnDestroy(): void {
-    this.chart()?.nativeElement?.remove();
-  }
+      if(this.chartInstance) {
+        this.chartInstance.data.datasets[0].data = data;
+         this.chartInstance.update();
+      }
+    }
+  });
 }

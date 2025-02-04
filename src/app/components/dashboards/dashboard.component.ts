@@ -94,8 +94,8 @@ export default class DashboardComponent {
   widgetsOpen = signal<boolean>(false);
 
   ngOnInit(): void {
+    this.leetcodeService.fetchStats(); //populate leetcode stats
     wrapGrid(this.dashboard().nativeElement, { duration: 500 }); 
-    
   }
 
   drop(event: CdkDragDrop<number, any>){
