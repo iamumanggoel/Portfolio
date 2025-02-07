@@ -29,8 +29,10 @@ import { forkJoin, map } from 'rxjs';
             </span>
             <div class="languages">
                   @for(language of project.languages; track language.name){
-                      <mat-icon>language</mat-icon>
-                      <h5>{{ language.name }}</h5>
+                      <div class="language">
+                        <mat-icon>language</mat-icon>
+                        {{ language.name }}
+                  </div>
                 }
                 </div>
             <button 
@@ -100,8 +102,14 @@ import { forkJoin, map } from 'rxjs';
       display: flex;
       flex-direction: row;
       align-items: center;
-      //justify-content: space-between;
+      justify-content: space-between;
       flex-wrap: wrap;
+
+      .language {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
     }
   `]
 })
