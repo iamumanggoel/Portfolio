@@ -4,5 +4,5 @@ export interface Project {
   html_url: string;
   languages_url?: string;
   updated_at: string;
-  languages?: { [key: string]: number };
+  languages?: { name: string; percentage: number }[]; 
 }
