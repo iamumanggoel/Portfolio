@@ -1,8 +1,9 @@
-import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, inject, signal, viewChild, PLATFORM_ID, OnInit, AfterViewInit} from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { WidgetComponent } from "./widgets/widget.component";
 import { DashboardService } from '../../services/dashboard.service';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { wrapGrid } from 'animate-css-grid';
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
@@ -14,7 +15,7 @@ import { LeetcodeService } from '../../services/leetcode.service';
   [
     WidgetComponent, 
     MatButtonModule,
-    MatIcon, 
+    MatIconModule, 
     MatMenuModule, 
     CdkDropList, 
     CdkDropListGroup,
@@ -85,7 +86,8 @@ import { LeetcodeService } from '../../services/leetcode.service';
     }
   `
 })
-export default class DashboardComponent {
+export default class DashboardComponent implements OnInit, AfterViewInit {
+  private platformId = inject(PLATFORM_ID);
 
   store = inject(DashboardService);
   leetcodeService = inject(LeetcodeService);
@@ -95,7 +97,12 @@ export default class DashboardComponent {
 
   ngOnInit(): void {
     this.leetcodeService.fetchStats(); //populate leetcode stats
-    wrapGrid(this.dashboard().nativeElement, { duration: 500 }); 
+  }
+
+  ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.platformId) && this.dashboard()?.nativeElement) {
+      wrapGrid(this.dashboard().nativeElement, { duration: 500 });
+    }
   }
 
   drop(event: CdkDragDrop<number, any>){

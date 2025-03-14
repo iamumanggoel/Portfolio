@@ -1,9 +1,11 @@
-import { Component, effect, ElementRef, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, OnInit, PLATFORM_ID, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import Chart from 'chart.js/auto'
 import { ThemeService } from '../../../../services/theme.service';
 import { RouterModule } from '@angular/router';
 import { LeetcodeService } from '../../../../services/leetcode.service';
+import { isPlatformBrowser } from '@angular/common';
+
 
 @Component({
   selector: 'app-analytics',
@@ -28,8 +30,10 @@ import { LeetcodeService } from '../../../../services/leetcode.service';
   
   `
 })
-export class LineChartComponent {
+export class LineChartComponent implements OnInit{
   
+  private platformId = inject(PLATFORM_ID);
+
   chart = viewChild.required<ElementRef>('chart');
   private themeService = inject(ThemeService);
   private leetcodeService = inject(LeetcodeService);
@@ -37,7 +41,9 @@ export class LineChartComponent {
   private chartInstance: Chart | null = null;
   
   ngOnInit(): void {
-    this.initializeChart([], []); 
+    if(isPlatformBrowser(this.platformId)){
+      this.initializeChart([], []); 
+    }
   }
 
   private initializeChart(labels: string[], data: number[]): void {
@@ -86,7 +92,7 @@ export class LineChartComponent {
 
   effect = effect(() => {
       const response = this.leetcodeService.leetcodeStats();
-      if (response) {
+      if (response && isPlatformBrowser(this.platformId)) {
         if (response?.submissionCalendar) {
           const labels = Object.keys(response.submissionCalendar).map((timestamp) =>
             new Date(parseInt(timestamp) * 1000).toLocaleDateString()

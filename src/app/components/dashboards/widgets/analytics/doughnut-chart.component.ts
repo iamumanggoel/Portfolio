@@ -1,7 +1,9 @@
-import { Component, ElementRef, OnInit, viewChild, inject, OnDestroy, effect } from '@angular/core';
+import { Component, ElementRef, viewChild, inject, effect, PLATFORM_ID } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { ThemeService } from '../../../../services/theme.service';
 import { LeetcodeService } from '../../../../services/leetcode.service';
+import { isPlatformBrowser } from '@angular/common';
+
 
 @Component({
   selector: 'app-doughnut-chart',
@@ -20,6 +22,7 @@ import { LeetcodeService } from '../../../../services/leetcode.service';
   ],
 })
 export class DoughnutChartComponent {
+  private platformId = inject(PLATFORM_ID);
   chart = viewChild.required<ElementRef>('chart');
 
   leetcodeService = inject(LeetcodeService);
@@ -27,7 +30,7 @@ export class DoughnutChartComponent {
 
   effect = effect(() => {
     const response = this.leetcodeService.leetcodeStats();
-    if (response) {
+    if (response && isPlatformBrowser(this.platformId)) {
       const { acceptanceRate } = response;
         const acceptedPercentage = acceptanceRate ?? 90;
         const rejectedPercentage = 100 - acceptanceRate;

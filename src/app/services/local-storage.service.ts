@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 export enum StorageKeys {
   RECENT_SEARCHES = 'recentSearches',
@@ -12,22 +13,33 @@ export enum StorageKeys {
 export class LocalStorageService {
 
   constructor() { }
+  private platformId = inject(PLATFORM_ID);
+
 
   set<T>(key: StorageKeys | string, value: T): void{
-    localStorage.setItem(key, JSON.stringify(value));
+    if(isPlatformBrowser(this.platformId)){
+      localStorage.setItem(key, JSON.stringify(value));
+    }
   }
 
  get<T>(key: StorageKeys | string): T | null {
-   const item = localStorage.getItem(key);
-   return item ? JSON.parse(item) as T : null;
+  if(isPlatformBrowser(this.platformId)){
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) as T : null;
+  }
+  return null;
  }
 
 
   clearItem(key: StorageKeys){
-    localStorage.removeItem(key);
+    if(isPlatformBrowser(this.platformId)){
+      localStorage.removeItem(key);
+    }
   }
 
   clearAll(){
-    localStorage.clear();
+    if(isPlatformBrowser(this.platformId)){
+      localStorage.clear();
+    }
   }
 }
