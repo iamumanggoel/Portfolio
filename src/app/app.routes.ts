@@ -4,7 +4,7 @@ export const routes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: '/home'
+        redirectTo: 'home'
     },
     {
         path: 'home',
@@ -25,6 +25,10 @@ export const routes: Routes = [
     {
         path: 'contact',
         loadComponent: () => import('./pages/contact.component')
+    },
+    {
+        path: '**',
+        redirectTo: 'home' 
     }
     
 ];
