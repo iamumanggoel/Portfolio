@@ -6,11 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "dev:ssr": "ng run portfolio:serve-ssr",
-    "serve:ssr": "node dist/portfolio/server/main.js",
-    "build:ssr": "ng build && ng run portfolio:server",
-    "prerender": "ng run portfolio:prerender"
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
@@ -27,10 +23,8 @@
     "@angular/platform-browser-dynamic": "^19.2.2",
     "@angular/platform-server": "^19.2.2",
     "@angular/router": "^19.2.2",
-    "@angular/ssr": "^19.2.3",
     "animate-css-grid": "^1.5.1",
     "chart.js": "^4.4.7",
-    "express": "^4.18.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

@@ -1,7 +1,6 @@
-import { Component, effect, ElementRef, inject, OnInit, PLATFORM_ID, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, OnInit, viewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { LeetcodeService } from '../../../../services/leetcode.service';
-import { isPlatformBrowser } from '@angular/common';
 
 
 @Component({
@@ -21,16 +20,13 @@ import { isPlatformBrowser } from '@angular/common';
   `,
 })
 export class PieChartComponent implements OnInit {
-  private platformId = inject(PLATFORM_ID);
 
   chart = viewChild.required<ElementRef>('chart');
   private leetcodeService = inject(LeetcodeService);
   private chartInstance: Chart | null = null;
 
   ngOnInit(): void {
-    if(isPlatformBrowser(this.platformId)){
-      this.initializeChart([0, 0, 0]); 
-    }
+    this.initializeChart([0, 0, 0]); 
   }
 
   private initializeChart(data: number[]): void {
@@ -68,7 +64,7 @@ export class PieChartComponent implements OnInit {
 
     effect = effect(() => {
     const response = this.leetcodeService.leetcodeStats();
-    if (response && isPlatformBrowser(this.platformId)) {
+    if (response) {
       const easySolved = response?.easySolved ?? 0;
       const mediumSolved = response?.mediumSolved ?? 0;
       const hardSolved = response?.hardSolved ?? 0;

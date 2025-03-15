@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, signal, viewChild, PLATFORM_ID, OnInit, AfterViewInit} from '@angular/core';
+import { Component, ElementRef, inject, signal, viewChild, OnInit, AfterViewInit} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { WidgetComponent } from "./widgets/widget.component";
 import { DashboardService } from '../../services/dashboard.service';
@@ -87,7 +87,6 @@ import { LeetcodeService } from '../../services/leetcode.service';
   `
 })
 export default class DashboardComponent implements OnInit, AfterViewInit {
-  private platformId = inject(PLATFORM_ID);
 
   store = inject(DashboardService);
   leetcodeService = inject(LeetcodeService);
@@ -100,9 +99,7 @@ export default class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.platformId) && this.dashboard()?.nativeElement) {
-      wrapGrid(this.dashboard().nativeElement, { duration: 500 });
-    }
+    wrapGrid(this.dashboard().nativeElement, { duration: 500 });
   }
 
   drop(event: CdkDragDrop<number, any>){
