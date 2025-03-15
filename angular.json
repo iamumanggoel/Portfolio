@@ -10,10 +10,12 @@
           "inlineTemplate": true,
           "inlineStyle": true,
           "skipTests": true,
-          "style": "scss"
+          "style": "scss",
+          "flat": true
         },
         "@schematics/angular:service": {
-          "skipTests": true
+          "skipTests": true,
+          "flat": true
         }
       },
       "root": "",
