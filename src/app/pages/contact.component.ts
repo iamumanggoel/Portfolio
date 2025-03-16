@@ -54,9 +54,9 @@ import { MatIconModule } from '@angular/material/icon';
         .email-box {
           all: unset;
           padding: 6px;
-          background-color: var(--mat-sys-surface-container);
-          border: 1px solid var(--mat-sys-outline-variant);
-          border-radius: 8px;
+          //background-color: var(--mat-sys-surface-container);
+          // border: 1px solid var(--mat-sys-outline-variant);
+          // border-radius: 8px;
           display: flex;
           gap: 1rem;
           align-items: center;
