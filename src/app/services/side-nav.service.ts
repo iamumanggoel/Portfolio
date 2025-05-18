@@ -10,7 +10,7 @@ export class SideNavService {
       { icon: 'home', label: 'Home', route: '/home'},
       { icon: 'person', label: 'About', route: '/about' },
       { icon: 'business_center', label: 'Projects', route: '/projects' },
-      { icon: 'code', label: 'Skills', route: '/skills' },
+      // { icon: 'code', label: 'Skills', route: '/skills' },
       { icon: 'contacts_product', label: 'Contact', route: '/contact' },
     ]);
     

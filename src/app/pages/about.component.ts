@@ -9,23 +9,24 @@ import { AuthService } from '../services/auth.service';
   template: `
     <div class="about-container">
       <div class="profile">
-        <img [src]="authService.user()?.profilePicture" alt="Umang Goel"> 
+        <!-- <img [src]="authService.user()?.profilePicture" alt="Umang Goel"> -->
         <div class="info">
           <h1>{{ authService.user()?.name }}</h1>
-          <h2> {{ authService.user()?.jobTitle }}</h2>
+          <h2>{{ authService.user()?.jobTitle }}</h2>
           <p>
-            Passionate about building modern web applications using 
-            <strong>Angular, ASP.NET Core</strong>, and cloud technologies.
-            I love solving complex problems and continuously improving my skills.
+            Full-Stack Developer experienced in designing and deploying scalable web applications using
+            <strong>ASP.NET Core</strong>, <strong>Angular</strong>, and modern cloud services.
+            Skilled in API development, DevOps automation, and secure integrations.
+            Proven ability to deliver high-quality solutions in Agile environments.
           </p>
           <div class="social-links">
-            <a href="https://linkedin.com/in/yourprofile" target="_blank">
+            <a href="https://linkedin.com/in/umang-goel-3b8447236" target="_blank">
               <mat-icon>linkedin</mat-icon>
             </a>
-            <a href="https://github.com/yourprofile" target="_blank">
+            <a href="https://github.com/iamumanggoel" target="_blank">
               <mat-icon>code</mat-icon>
             </a>
-            <a href="mailto:your@email.com">
+            <a href="mailto:umg2508@gmail.com">
               <mat-icon>email</mat-icon>
             </a>
           </div>
@@ -34,16 +35,30 @@ import { AuthService } from '../services/auth.service';
 
       <div class="details">
         <h2>Education 🎓</h2>
-        <p>Bachelor of Technology in Computer Science</p>
-        <p>Chandigarh Group Of Colleges, Jhanjeri, India</p>
+        <p>Bachelor of Technology in Computer Science (2019 – 2023)</p>
+        <p>Chandigarh Group Of Colleges, Punjab, India — GPA: 8.85 / 10</p>
 
         <h2>Skills 🛠️</h2>
         <ul>
-          <li>Angular, RxJS, TypeScript</li>
+          <li>Angular (18+), RxJS, TypeScript, Angular Material, Tailwind CSS</li>
           <li>ASP.NET Core, C#</li>
-          <li>Cloud: Azure & AWS</li>
-          <li>SQL & NoSQL Databases</li>
-          <li>Docker & CI/CD Pipelines</li>
+          <li>Cloud: Azure DevOps, Azure App Services</li>
+          <li>SQL Server, PostgreSQL</li>
+          <li>CI/CD Pipelines, Git, Swagger, Postman</li>
+        </ul>
+
+        <h2>Certifications 📜</h2>
+        <ul>
+          <li>
+            <a href="https://learn.microsoft.com/api/credentials/share/en-us/UmangGoel-0500/CFF2E11833709607?sharingId=670FC89B9325ADE2" target="_blank">
+              Microsoft Certified: Azure Administrator Associate (AZ-104)
+            </a>
+          </li>
+          <li>
+            <a href="https://learn.microsoft.com/api/credentials/share/en-us/UmangGoel-0500/91C63EFEC45E55CD?sharingId=670FC89B9325ADE2" target="_blank">
+              Microsoft Certified: DevOps Engineer Expert (AZ-400)
+            </a>
+          </li>
         </ul>
       </div>
     </div>
