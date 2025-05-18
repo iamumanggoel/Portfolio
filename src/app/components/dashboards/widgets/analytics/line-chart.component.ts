@@ -1,9 +1,10 @@
-import { Component, effect, ElementRef, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, OnInit, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import Chart from 'chart.js/auto'
 import { ThemeService } from '../../../../services/theme.service';
 import { RouterModule } from '@angular/router';
 import { LeetcodeService } from '../../../../services/leetcode.service';
+
 
 @Component({
   selector: 'app-analytics',
@@ -28,8 +29,9 @@ import { LeetcodeService } from '../../../../services/leetcode.service';
   
   `
 })
-export class LineChartComponent {
+export class LineChartComponent implements OnInit{
   
+
   chart = viewChild.required<ElementRef>('chart');
   private themeService = inject(ThemeService);
   private leetcodeService = inject(LeetcodeService);

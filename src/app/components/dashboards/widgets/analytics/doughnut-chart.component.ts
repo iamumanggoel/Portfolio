@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, viewChild, inject, OnDestroy, effect } from '@angular/core';
+import { Component, ElementRef, viewChild, inject, effect } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { ThemeService } from '../../../../services/theme.service';
 import { LeetcodeService } from '../../../../services/leetcode.service';

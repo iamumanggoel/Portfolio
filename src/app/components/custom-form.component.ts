@@ -13,6 +13,7 @@ import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { MatIconModule } from '@angular/material/icon';
+import { FieldErrorDirective } from '../directives/field-error.directive';
 
 
 @Component({
@@ -29,7 +30,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatDatepickerModule,
     MatSlideToggleModule,
     MatChipsModule,
-    MatIconModule
+    MatIconModule,
+    FieldErrorDirective,
   ],
   providers: [
     provideNativeDateAdapter()
@@ -47,6 +49,7 @@ import { MatIconModule } from '@angular/material/icon';
             <mat-form-field>
               <mat-label>{{ control.label }}</mat-label>
               <input matInput [formControlName]="control.formControlName">
+              <mat-error appFieldError />
             </mat-form-field>
           }
           
@@ -58,6 +61,7 @@ import { MatIconModule } from '@angular/material/icon';
                   <mat-option [value]="opt.key">{{ opt.value }}</mat-option>
                 }
               </mat-select>
+              <mat-error appFieldError />
             </mat-form-field>
           }
   
@@ -81,6 +85,7 @@ import { MatIconModule } from '@angular/material/icon';
               <input matInput [matDatepicker]="picker" [formControlName]="control.formControlName">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
+              <mat-error appFieldError />
             </mat-form-field>
           }
   
@@ -97,6 +102,7 @@ import { MatIconModule } from '@angular/material/icon';
                 [cols]="getTextAreaDimension(control, 'cols')" 
                 [rows]="getTextAreaDimension(control, 'rows')">
               </textarea>
+              <mat-error appFieldError />
             </mat-form-field>
           }
   
@@ -121,6 +127,7 @@ import { MatIconModule } from '@angular/material/icon';
               [matChipInputAddOnBlur]="addOnBlur"
               (matChipInputTokenEnd)="add(control, $event)"
               >
+              <mat-error appFieldError />
             </mat-form-field>
           }
         }
@@ -265,7 +272,6 @@ export abstract class BaseControl<T> {
   }
 }
 
-// ✅ Adding constructor
 export class InputControl<T> extends BaseControl<T> {
   override type: ControlType = 'input';
 
@@ -280,7 +286,6 @@ export class InputControl<T> extends BaseControl<T> {
   }
 }
 
-// ✅ Adding constructor to initialize `options`
 export class SelectControl<T> extends BaseControl<T> {
   override type: ControlType = 'select';
   options: { key: any; value: any }[];
@@ -298,7 +303,6 @@ export class SelectControl<T> extends BaseControl<T> {
   }
 }
 
-// ✅ Adding constructor to initialize `options`
 export class RadioControl<T> extends BaseControl<T> {
   override type: ControlType = 'radio';
   options: { key: any; value: any }[];
@@ -316,7 +320,6 @@ export class RadioControl<T> extends BaseControl<T> {
   }
 }
 
-// ✅ Simple constructor for CheckboxControl
 export class CheckboxControl<T> extends BaseControl<T> {
   override type: ControlType = 'checkbox';
 
@@ -331,7 +334,6 @@ export class CheckboxControl<T> extends BaseControl<T> {
   }
 }
 
-// ✅ Simple constructor for DateControl
 export class DateControl<T> extends BaseControl<T> {
   override type: ControlType = 'date';
 
@@ -346,7 +348,6 @@ export class DateControl<T> extends BaseControl<T> {
   }
 }
 
-// ✅ Simple constructor for ToggleControl
 export class ToggleControl<T> extends BaseControl<T> {
   override type: ControlType = 'toggle';
 
@@ -361,7 +362,6 @@ export class ToggleControl<T> extends BaseControl<T> {
   }
 }
 
-// ✅ Constructor to handle `cols` and `rows`
 export class TextareaControl<T> extends BaseControl<T> {
   override type: ControlType = 'textarea';
   cols: number;
@@ -382,14 +382,13 @@ export class TextareaControl<T> extends BaseControl<T> {
   }
 }
 
-// ✅ Constructor to initialize `value` as an array
 export class ChipsControl<T> extends BaseControl<T[]> {
   override type: ControlType = 'chips';
   override value: T[];
 
   constructor(
     formControlName: string,
-    value: T[] = [], // Default empty array
+    value: T[] = [],
     label: string,
     validators: ValidatorFn[],
     order: number

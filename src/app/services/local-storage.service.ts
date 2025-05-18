@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 export enum StorageKeys {
   RECENT_SEARCHES = 'recentSearches',
@@ -17,10 +18,10 @@ export class LocalStorageService {
     localStorage.setItem(key, JSON.stringify(value));
   }
 
- get<T>(key: StorageKeys | string): T | null {
-   const item = localStorage.getItem(key);
-   return item ? JSON.parse(item) as T : null;
- }
+  get<T>(key: StorageKeys | string): T | null {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) as T : null; 
+  }
 
 
   clearItem(key: StorageKeys){

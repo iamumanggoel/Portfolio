@@ -1,6 +1,7 @@
-import { Component, effect, ElementRef, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, OnInit, viewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { LeetcodeService } from '../../../../services/leetcode.service';
+
 
 @Component({
   selector: 'app-pie-chart',
@@ -18,11 +19,10 @@ import { LeetcodeService } from '../../../../services/leetcode.service';
     }
   `,
 })
-export class PieChartComponent {
+export class PieChartComponent implements OnInit {
+
   chart = viewChild.required<ElementRef>('chart');
-
   private leetcodeService = inject(LeetcodeService);
-
   private chartInstance: Chart | null = null;
 
   ngOnInit(): void {
