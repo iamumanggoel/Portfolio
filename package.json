@@ -26,6 +26,9 @@
     "@ngneat/until-destroy": "^10.0.0",
     "animate-css-grid": "^1.5.1",
     "chart.js": "^4.4.7",
+    "install": "^0.13.0",
+    "ng2-pdf-viewer": "^10.4.0",
+    "npm": "^11.4.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
